@@ -1,0 +1,45 @@
+<% content_for :head do %>
+  <script src="https://static.vline.com/vline.js" type="text/javascript"></script>
+<% end %>
+
+<h3>Home</h3>
+<% @users.each do |user| %>
+  <div>
+    User: <%= vline_launch user.name, user %>, Presence: <span id="<%= user.id %>">offline</span>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+    var loginToken = "<%= Vline.create_login_token(current_user.id) %>";
+    var appId = "<%= Vline.app_id %>";
+    var authId = "<%= Vline.provider_id %>";
+    var profile = {"displayName" : "<%= current_user.name %>"};
+
+    var people = [
+        <% @users.each do |user| %>
+        "<%= user.id %>",
+        <% end %>
+    ];
+
+    var client = vline.client.create(appId);
+
+    client.on('login', function(e) {
+        var session = e.target;
+
+        for (var i=0; i < people.length; i++) {
+            session.getPerson(people[i])
+                    .done(function(person) {
+                        var updatePresence = function(e) {
+                            var person = e.target;
+                            var elem = document.getElementById(person.getShortId());
+                            elem.innerHTML = person.getPresenceState();
+                        };
+
+                        updatePresence({target: person});
+                        person.on('change:online', updatePresence);
+                    });
+        }
+    });
+
+    client.login(authId, profile, loginToken);
+</script>
