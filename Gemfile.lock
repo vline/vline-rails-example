@@ -1,12 +1,3 @@
-PATH
-  remote: /Users/tom/Projects/vline-master/vline-rails
-  specs:
-    vline-rails (0.0.5)
-      grape
-      jwt
-      rack-jsonp
-      rails (~> 3.2.9)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -101,17 +92,17 @@ GEM
       rails (>= 3, < 5)
     gherkin (2.11.6)
       json (>= 1.7.6)
-    grape (0.3.1)
+    grape (0.3.2)
       activesupport
       builder
-      hashie (~> 1.2)
+      hashie (>= 1.2.0)
       multi_json (>= 1.3.2)
       multi_xml (>= 0.5.2)
       rack
       rack-accept
       rack-mount
       virtus
-    hashie (1.2.0)
+    hashie (2.0.2)
     hike (1.2.1)
     i18n (0.6.3)
     journey (1.0.4)
@@ -119,8 +110,8 @@ GEM
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.7.7)
-    jwt (0.1.5)
-      multi_json (>= 1.0)
+    jwt (0.1.7)
+      multi_json (>= 1.5)
     launchy (2.2.0)
       addressable (~> 2.3)
     mail (2.4.4)
@@ -210,6 +201,11 @@ GEM
     virtus (0.5.4)
       backports (~> 2.6.1)
       descendants_tracker (~> 0.0.1)
+    vline-rails (0.0.6)
+      grape
+      jwt
+      rack-jsonp
+      rails (~> 3.2.9)
     warden (1.2.1)
       rack (>= 1.0)
     websocket (1.0.7)
@@ -242,4 +238,4 @@ DEPENDENCIES
   simple_form (>= 2.0.4)
   sqlite3
   uglifier (>= 1.0.3)
-  vline-rails!
+  vline-rails
