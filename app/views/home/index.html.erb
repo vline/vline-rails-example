@@ -21,7 +21,7 @@
         <% end %>
     ];
 
-    var client = vline.client.create(appId);
+    var client = vline.Client.create({"appId": appId});
 
     client.on('login', function(e) {
         var session = e.target;
