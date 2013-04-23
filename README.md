@@ -1,19 +1,19 @@
 # vLineRails Example
 
-The vLineRails Example shows you how to create a Rails app that can be used with the low level vLine API and also
-used to launch a version of the vLine app that uses the users you provide.
+The vLineRails Example shows you how to create a Rails app that can be used with the low-level vLine API and also
+used to launch the vLine Web Client that uses the users you provide.
 
 ## Before you begin
 
-1. Sign up for a [vLine developer account] (https://vline.com/developer).
-1. Sign up for [forward](https://forwardhq.com/) and install the gem: `gem install forward`
-1. Install ruby version 1.9.3 or newer
+1. Sign up for a [vLine developer account] (https://vline.com/developer/).
+1. Sign up for [Forward](https://forwardhq.com/) and install the gem: `gem install forward`.
+1. Install ruby version 1.9.3 or newer.
 1. Clone this repository.
-1. Optional: [Install rvm](https://rvm.io/rvm/install/)
+1. Optional: [Install rvm](https://rvm.io/rvm/install/).
 
-## Create your vLine app
+## Create your vLine Service
 
-Create an app in the vLine developer console.
+Create a service in the [vLine Developer Console](https://vline.com/developer/).
 
 ## Create your Rails app (Rails 3.x)
 
@@ -30,19 +30,23 @@ Create an app in the vLine developer console.
         cd ../vline
 
     The following instructions walk you through creating the Rails app from scratch. If you'd rather use the
-pre-generated one, you can skip to the "Configure your app" step.
+pre-generated one, you can skip to the [Configure your app](#configure-your-app) step. Make sure you have configured the values in `config/initializers/vline.rb`.
 
 1. Create the new app:
 
-        rails new vline-demo-app -m https://raw.github.com/RailsApps/rails-composer/master/composer.rb -T
+        rails new vline-demo-app -m https://raw.github.com/RailsApps/rails-composer/f9d885977ad345dd90f07e6dcdac17407cf9b3a7/composer.rb -T
 
 1. You will get several prompts. Choose the following:
     * `4) rails-3-bootstrap-devise-cancan`
     * `1) WEBrick (default)`
     * `1) Same as development`
     * `1) ERB`
+    * `1) None`
+    * `Set a robots.txt file to ban spiders:`: You choose
+    * `Create a GitHub repository?`: You choose
+    * `Use or create a project-specific rvm gemset?`: y
 
-1. If you get any error messages during this process, take a look at [this page](http://railsapps.github.com/rails-error-you-have-already-activated.html).
+1. At the end of the setup, you should see `Your bundle is complete!`. If you get any error messages during this process, take a look at [this page](http://railsapps.github.com/rails-error-you-have-already-activated.html).
 
 1. Change into the app directory:
 
@@ -61,13 +65,15 @@ pre-generated one, you can skip to the "Configure your app" step.
 
 ### Install vLineRails Plugin in your application
 
-1. Find your app in the vLine Developer console and make note of the `App Id` and `App Secret`.
+1. Add `gem "vline-rails"` to your `Gemfile` and run `bundle install` to install it.
+
+1. Find your service in the [vLine Developer console](https://vline.com/developer/) and make note of the `Service ID` and `API Secret`.
 
 1. Use the values from the last step to generate the vLine provider by running the following command:
 
-        rails generate vline_provider --app-id=Your-App-Id --provider-secret=Your-App-Secret
+        rails generate vline_provider --service-id=Your-Service-Id --provider-secret=Your-Service-API-Secret
 
-    Make note of the `Client Id` and `Client Secret` output by the command.
+    Make note of the `Client ID` and `Client Secret` output by the command.
 
 1. Check your `config.ru` file and verify that it has:
 
@@ -76,7 +82,7 @@ pre-generated one, you can skip to the "Configure your app" step.
 
 ### Add presence to your Rails app
 
-1. At the top of `app/views/home/index.html.erb`, add the following, which includes the vline JavaScript:
+1. At the top of `app/views/home/index.html.erb`, add the following, which includes vline.js:
 
         <% content_for :head do %>
           <script src="https://static.vline.com/vline.js" type="text/javascript"></script>
@@ -96,7 +102,7 @@ pre-generated one, you can skip to the "Configure your app" step.
 
         <script type="text/javascript">
             var loginToken = "<%= Vline.create_login_token(current_user.id) %>";
-            var appId = "<%= Vline.app_id %>";
+            var serviceId = "<%= Vline.service_id %>";
             var authId = "<%= Vline.provider_id %>";
             var profile = {"displayName" : "<%= current_user.name %>"};
 
@@ -106,7 +112,7 @@ pre-generated one, you can skip to the "Configure your app" step.
                 <% end %>
             ];
 
-            var client = vline.client.create(appId);
+            var client = vline.client.create(serviceId);
 
             client.on('login', function(e) {
                 var session = e.target;
@@ -143,6 +149,10 @@ pre-generated one, you can skip to the "Configure your app" step.
 
 ## Configure your app
 
+1. Make sure all dependencies are installed:
+
+        bundle install
+
 1. Prepare the database:
 
         rake db:migrate
@@ -154,25 +164,24 @@ pre-generated one, you can skip to the "Configure your app" step.
 
 1. Add the generated token to `config/initializers/secret_token.rb`.
 
-1. Start forward by running the following command in your app directory:
+1. Start [Forward](https://forwardhq.com/) by running the following command in your app directory:
 
         forward 3000
 
     Make a note of the URL that it prints so that you can use it in the next steps.
 
-1. Go the configuration page for your app in the vLine developer console.
+1. Open up the [vLine Developer Console](https://vline.com/developer/) and choose `Service Settings`.
 
-1. You'll notice there are default URLs set for images used by the app. You can leave these as-is or change them to
-custom images for your app.
-
-1. Select `Custom OAuth` in the `Authorization` dropdown:
-    * Add the `Client Id` and `Client Secret` from the `rails generate` command you previously ran.
+1. Click the `Edit` button and select `Custom OAuth` in the `Authorization` dropdown:
+    * Add the `Client ID` and `Client Secret` from the `rails generate` command you previously ran.
     * Set the `Provider URL` to : `https://your-forward-url/_vline/api/v1/`
     * Set the `OAuth URL` to: `https://your-forward-url/_vline/api/v1/oauth/`
 
+1. Further customization of the Web Client can be done by providing custom images in the `Web Client Settings`.
+
 ## Run your app
 
-1. Run the rails server in your app directory:
+1. Run the rails server in your app directory (make sure Forward is still running):
 
         rails server
 

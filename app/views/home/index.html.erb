@@ -11,7 +11,7 @@
 
 <script type="text/javascript">
     var loginToken = "<%= Vline.create_login_token(current_user.id) %>";
-    var appId = "<%= Vline.app_id %>";
+    var serviceId = "<%= Vline.service_id %>";
     var authId = "<%= Vline.provider_id %>";
     var profile = {"displayName" : "<%= current_user.name %>"};
 
@@ -21,7 +21,7 @@
         <% end %>
     ];
 
-    var client = vline.Client.create({"appId": appId});
+    var client = vline.Client.create({"serviceId": serviceId});
 
     client.on('login', function(e) {
         var session = e.target;

@@ -2,11 +2,11 @@ require 'vline'
 
 Vline.setup do |config|
 
-  config.app_id = 'vlinetest'
-  config.provider_id = 'vlinetest'
-  config.client_id = 'aGG6wizg31HDIbfhzOeSc5JzV1qmgZwBWU4qKgxulUY'
-  config.client_secret = 'V8kCAeC2ekt4VrRnnkkxNn-8r8RwQSc1IxpREA1x3VQ'
+  config.service_id = 'YOUR_SERVICE_ID'             # See vLine Developer Console
+  config.provider_id = 'YOUR_PROVIDER_ID'           # Usually same as service_id
+  config.client_id = 'YOUR_OAUTH_CLIENT_ID'         # Random string you generate: ruby -e "require 'securerandom'; puts SecureRandom.urlsafe_base64(32)"
 
-  # NOTE: replace this with a secret (i.e., not checked into vcs) value in production!!
-  config.provider_secret = 'JIm_h_wUHdBIPDaRK5LTwgmxNRMwXmCz9v45RYdeXxo'
+  # WARNING: Do not check these values into VCS! 
+  config.client_secret = 'YOUR_OAUTH_CLIENT_SECRET'   # Random string you generate: ruby -e "require 'securerandom'; puts SecureRandom.urlsafe_base64(32)"
+  config.provider_secret = 'YOUR_SERVICE_API_SECRET'  # See vLine Developer Console
 end
