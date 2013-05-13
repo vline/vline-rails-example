@@ -190,3 +190,4 @@ pre-generated one, you can skip to the [Configure your app](#configure-your-app)
 1. Open up a Chrome incognito window.
 1. Log in as `user2@example.com`.
 1. You should see both "First User" and "User 2" online.
+1. Click on a user to launch the Web Client, where you can chat and make calls.
