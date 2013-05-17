@@ -95,8 +95,13 @@ pre-generated one, you can skip to the [Configure your app](#configure-your-app)
     with
 
         <div>
-          User: <%= vline_launch user.name, user %>, Presence: <span id="<%= user.id %>">offline</span>
-        </div>
+              User: <%= user.name %>,
+              Presence: <span id="<%= user.id %>">offline</span>,
+              <%= vline_launch "Launch Web Client", user %>
+              <span id="call-<%= user.id %>" style="display:none">
+                , <a onclick="call('<%= user.id %>')" href="javascript:void(0)">Call</a>
+              </span>
+          </div>
 
 1. In the same file, add the following JavaScript at the bottom of the file:
 
@@ -112,18 +117,39 @@ pre-generated one, you can skip to the [Configure your app](#configure-your-app)
                 <% end %>
             ];
 
-            var client = vline.client.create(serviceId);
+            var client = vline.Client.create({"serviceId": serviceId, "ui": true});
+
+            var session;
+
+            function call(userId) {
+                if (session) {
+                    session.getPerson(userId)
+                            .done(function(person) {
+                                person.startMedia();
+                            });
+                }
+            }
 
             client.on('login', function(e) {
-                var session = e.target;
+                session = e.target;
 
                 for (var i=0; i < people.length; i++) {
                     session.getPerson(people[i])
                             .done(function(person) {
                                 var updatePresence = function(e) {
                                     var person = e.target;
-                                    var elem = document.getElementById(person.getShortId());
-                                    elem.innerHTML = person.getPresenceState();
+                                    var presenceState = person.getPresenceState();
+                                    var shortId = person.getShortId();
+                                    var elem = document.getElementById(shortId);
+                                    elem.innerHTML = presenceState;
+
+                                    // Show/hide the call link based on presence
+                                    elem = document.getElementById('call-' + shortId);
+                                    if (presenceState === "online" && shortId !== "<%= current_user.id %>") {
+                                        elem.style.display = "";
+                                    } else {
+                                        elem.style.display = "none";
+                                    }
                                 };
 
                                 updatePresence({target: person});
@@ -190,4 +216,5 @@ pre-generated one, you can skip to the [Configure your app](#configure-your-app)
 1. Open up a Chrome incognito window.
 1. Log in as `user2@example.com`.
 1. You should see both "First User" and "User 2" online.
-1. Click on a user to launch the Web Client, where you can chat and make calls.
+1. Click `Launch Web Client` to launch the Web Client for a specific user.
+1. A `Call` link will show up next to online users and will initiate a call directly from the page.
