@@ -62,7 +62,7 @@
                         };
 
                         updatePresence({target: person});
-                        person.on('change:online', updatePresence);
+                        person.on('change:presenceState', updatePresence);
                     });
         }
     });

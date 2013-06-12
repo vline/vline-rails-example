@@ -153,7 +153,7 @@ pre-generated one, you can skip to the [Configure your app](#configure-your-app)
                                 };
 
                                 updatePresence({target: person});
-                                person.on('change:online', updatePresence);
+                                person.on('change:presenceState', updatePresence);
                             });
                 }
             });
